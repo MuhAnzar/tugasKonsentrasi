@@ -3,12 +3,12 @@
 @section('content-fe')
     <style>
         /* .showcase {
-                                                                                            background-color: #fefefe;
-                                                                                            min-height: 100vh;
-                                                                                            display: flex;
-                                                                                            justify-content: center;
-                                                                                            align-items: center;
-                                                                                        } */
+                                                                                                        background-color: #fefefe;
+                                                                                                        min-height: 100vh;
+                                                                                                        display: flex;
+                                                                                                        justify-content: center;
+                                                                                                        align-items: center;
+                                                                                                    } */
 
         .travel-card {
             position: relative;
@@ -307,8 +307,9 @@
                                                 <div class="card-body">
                                                     <div class="form-check">
                                                         <!-- Radio Button -->
-                                                        <input type="radio" class="form-check-input" name="jasa_travel"
-                                                            id="travel_{{ $j->id }}" value="{{ $j->id }}"
+                                                        <input type="radio" class="form-check-input travel"
+                                                            onclick="updateJasaTravel('{{ $j->id_222058 }}','{{ $j->harga_perjalanan_222058 }}','{{ $j->nama_travel_222058 }}')"
+                                                            id="travel_{{ $j->id }}" value="{{ $j->id_222058 }}"
                                                             data-harga="{{ $j->harga_perjalanan_222058 }}"
                                                             data-nama="{{ $j->nama_travel_222058 }}">
                                                         <label class="form-check-label" for="travel_{{ $j->id }}"
@@ -322,17 +323,23 @@
                                                         </label>
 
 
+
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 @endforeach
+
                                 <button class="btn btn-default prevBtn btn-lg pull-left mt-4" type="button">Prev</button>
-                                <button class="btn btn-primary nextBtn btn-lg pull-right mt-4" type="button">Next</button>
+                                <button class="btn btn-primary nextBtn nextBtn2 btn-lg pull-right mt-4" type="button">Next</button>
                             </div>
                         </div>
                     </div>
+
+                    <input type="hidden" class="input-id-jasa-travel" name="jasa_travel">
+                    <input type="hidden" class="input-nama-jasa-travel" name="nama_jasa_travel">
+                    <input type="hidden" class="input-harga-jasa-travel" name="harga_jasa_travel">
 
                     <div class="row setup-content" id="step-3">
                         <div class="col-xs-12">
@@ -409,17 +416,30 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const nextStepBtn = document.querySelector('.nextBtn');
+        function updateJasaTravel(id, harga, nama) {
+            console.log(id);
+            
+            $('.input-id-jasa-travel').val(id);
+            $('.input-nama-jasa-travel').val(nama);
+            $('.input-harga-jasa-travel').val(harga);
 
-            nextStepBtn.addEventListener('click', function() {
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const nextStepBtn = document.querySelector('.nextBtn');
+            const nextStepBtn2 = document.querySelector('.nextBtn2');
+
+            nextStepBtn2.addEventListener('click', function() {
                 // Ambil data dari Step 2
                 const jumlahTiket = document.querySelector('input[name="jumlah_tiket"]').value || 0;
                 const hargaTiket = document.querySelector('input[name="harg_tiket"]').value || 0;
-                const jasaTravel = document.querySelector('input[name="jasa_travel"]:checked');
 
-                const hargaJasa = jasaTravel ? jasaTravel.dataset.harga : 0;
-                const namaJasa = jasaTravel ? jasaTravel.dataset.nama : 'Tidak ada';
+                // Ambil data dari input hidden
+                const hargaJasa = document.querySelector('input[name="harga_jasa_travel"]').value || 0;
+                const namaJasa = document.querySelector('input[name="nama_jasa_travel"]').value || 'Tidak ada';
+
+                console.log('Jumlah Tiket:', jumlahTiket, 'Harga Tiket:', hargaTiket);
+                console.log('Jasa Travel:', hargaJasa, namaJasa);
 
                 // Kalkulasi total bayar
                 const totalTiketHarga = jumlahTiket * hargaTiket;

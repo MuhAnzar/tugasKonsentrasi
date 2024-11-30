@@ -37,7 +37,6 @@ Route::post('/processPayment/{id}', 'LandingPageController@processPayment')->nam
 Route::get('/rating/{id}', 'LandingPageController@rating')->name('rating');
 
 Route::get('/home', 'HomeController@index')->name('home');
-
 /**
  * Admin routes
  */

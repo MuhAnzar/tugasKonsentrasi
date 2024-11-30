@@ -245,7 +245,7 @@
                         <!-- Instruksi Pembayaran -->
                         <div class="border p-3 mb-4">
                             <h5>Instruksi Pembayaran</h5>
-                            <p><strong>Total Bayar:</strong> Rp. 75.000</p>
+                            <p><strong>Total Bayar:</strong> Rp. @currency($tiket->total_222058)</p>
 
                             <div class="d-flex justify-content-between align-items-center">
                                 <span>No Rekening:</span>
