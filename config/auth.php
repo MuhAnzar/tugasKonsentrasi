@@ -47,9 +47,9 @@ return [
             'hash' => false,
         ],
 
-        'admin' => [
+        'pengguna' => [
             'driver' => 'session',
-            'provider' => 'admins',
+            'provider' => 'penggunas',
         ],
 
         'admin_api' => [
@@ -82,9 +82,9 @@ return [
             'model' => App\User::class,
         ],
 
-        'admins' => [
+        'penggunas' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Admin::class,
+            'model' => App\Models\Pengguna::class,
         ],
     ],
 

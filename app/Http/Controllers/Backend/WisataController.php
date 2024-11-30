@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\FotoWisata;
 use App\Models\JasaTravel;
 use App\Models\Pembayaran;
+use App\Models\Review;
 use App\Models\Tiket;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -20,7 +21,7 @@ class WisataController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            $this->user = Auth::guard('admin')->user();
+            $this->user = Auth::guard('pengguna')->user();
             return $next($request);
         });
     }
@@ -29,7 +30,7 @@ class WisataController extends Controller
     {
         $data['page_title'] = 'Wisata';
         $data['wisata'] = Wisata::orderBy('created_at', 'desc')->get();
-
+        // dd(Auth::guard('pengguna')->user());
         return view('backend.pages.wisata.index', $data);
     }
 
@@ -51,11 +52,11 @@ class WisataController extends Controller
         return view('backend.pages.wisata.pesanan', $data);
     }
 
-    public function updatePesanan(Request $request, $id,$status)
+    public function updatePesanan(Request $request, $id, $status)
     {
-      
+
         $pembayaran = Pembayaran::where('id_222058', $id)->firstOrFail();
-        $pembayaran->status_222058 = $status; 
+        $pembayaran->status_222058 = $status;
         $pembayaran->save();
 
         // Redirect back with a success message
@@ -72,12 +73,12 @@ class WisataController extends Controller
             DB::beginTransaction();
 
             $wisata = new Wisata();
-            $wisata->nama_222058 = $request->nama_wisata; 
-            $wisata->deskripsi_222058 = $request->deskripsi; 
-            $wisata->lokasi_222058 = $request->lokasi; 
-            $wisata->harga_222058 = $request->harga_tiket; 
-            $wisata->jumlah_tiket_222058 = $request->jumlah_tiket; 
-            $wisata->jumlah_gazebo_222058 = $request->jumlah_gazebo; 
+            $wisata->nama_222058 = $request->nama_wisata;
+            $wisata->deskripsi_222058 = $request->deskripsi;
+            $wisata->lokasi_222058 = $request->lokasi;
+            $wisata->harga_222058 = $request->harga_tiket;
+            $wisata->jumlah_tiket_222058 = $request->jumlah_tiket;
+            $wisata->jumlah_gazebo_222058 = $request->jumlah_gazebo;
             $wisata->save();
 
             // Menyimpan foto wisata
@@ -85,14 +86,14 @@ class WisataController extends Controller
                 $no = 1;
                 foreach ($request->file('foto_wisata') as $index => $foto) {
                     $fotoWisata = new FotoWisata();
-                    $fotoWisata->wisata_id_222058 = $wisata->id_222058; 
-                    $fotoWisata->deskripsi_222058 = $request->deskripsi_foto[$index]; 
+                    $fotoWisata->wisata_id_222058 = $wisata->id_222058;
+                    $fotoWisata->deskripsi_222058 = $request->deskripsi_foto[$index];
                     if ($foto) {
                         $image = $foto;
                         $name = $no++ . '-' . time() . '.' . $image->getClientOriginalExtension();
                         $destinationPath = public_path('assets/img/foto_wisata/');
                         $image->move($destinationPath, $name);
-                        $fotoWisata->url_foto_222058 = $name; 
+                        $fotoWisata->url_foto_222058 = $name;
                     }
                     $fotoWisata->save();
                 }
@@ -106,10 +107,10 @@ class WisataController extends Controller
             if (is_array($namaTravels) && is_array($jenisKendaraans) && is_array($tarifs)) {
                 foreach ($namaTravels as $index => $namaTravel) {
                     $jasaTravel = new JasaTravel();
-                    $jasaTravel->wisata_id_222058 = $wisata->id_222058; 
-                    $jasaTravel->nama_travel_222058 = $namaTravel; 
-                    $jasaTravel->jenis_kendaraan_222058 = $jenisKendaraans[$index]; 
-                    $jasaTravel->harga_perjalanan_222058 = $tarifs[$index]; 
+                    $jasaTravel->wisata_id_222058 = $wisata->id_222058;
+                    $jasaTravel->nama_travel_222058 = $namaTravel;
+                    $jasaTravel->jenis_kendaraan_222058 = $jenisKendaraans[$index];
+                    $jasaTravel->harga_perjalanan_222058 = $tarifs[$index];
                     $jasaTravel->save();
                 }
             }
@@ -138,7 +139,7 @@ class WisataController extends Controller
     public function edit($id)
     {
         $data['page_title'] = 'Edit Data Wisata';
-        $data['wisata'] = Wisata::where('id_222058',$id)->first();
+        $data['wisata'] = Wisata::where('id_222058', $id)->first();
         $data['foto'] = FotoWisata::where('wisata_id_222058', $id)->get();
         $data['jasa'] = JasaTravel::where('wisata_id_222058', $id)->get();
 
@@ -154,23 +155,23 @@ class WisataController extends Controller
             DB::beginTransaction();
 
             // Menyesuaikan kolom nama sesuai dengan query tabel
-            $wisata = Wisata::where('id_222058',$id)->first();
-            $wisata->nama_222058 = $request->nama_wisata; 
-            $wisata->deskripsi_222058 = $request->deskripsi; 
-            $wisata->lokasi_222058 = $request->lokasi; 
-            $wisata->harga_222058 = $request->harga_tiket; 
-            $wisata->jumlah_tiket_222058 = $request->jumlah_tiket; 
-            $wisata->jumlah_gazebo_222058 = $request->jumlah_gazebo; 
+            $wisata = Wisata::where('id_222058', $id)->first();
+            $wisata->nama_222058 = $request->nama_wisata;
+            $wisata->deskripsi_222058 = $request->deskripsi;
+            $wisata->lokasi_222058 = $request->lokasi;
+            $wisata->harga_222058 = $request->harga_tiket;
+            $wisata->jumlah_tiket_222058 = $request->jumlah_tiket;
+            $wisata->jumlah_gazebo_222058 = $request->jumlah_gazebo;
             $wisata->save();
 
             // Menghapus foto yang tidak dipilih lagi
             if ($request->has('old_photo')) {
                 $oldPhotos = $request->old_photo;
-                $existingPhotos = FotoWisata::where('wisata_id_222058', $id)->get(); 
+                $existingPhotos = FotoWisata::where('wisata_id_222058', $id)->get();
 
                 foreach ($existingPhotos as $fotoWisata) {
-                    if (!in_array($fotoWisata->id_222058, $oldPhotos)) { 
-                        $filePath = public_path('assets/img/foto_wisata/' . $fotoWisata->url_foto_222058); 
+                    if (!in_array($fotoWisata->id_222058, $oldPhotos)) {
+                        $filePath = public_path('assets/img/foto_wisata/' . $fotoWisata->url_foto_222058);
                         if (File::exists($filePath)) {
                             File::delete($filePath);
                         }
@@ -189,22 +190,22 @@ class WisataController extends Controller
                     $image->move($destinationPath, $name);
 
                     FotoWisata::create([
-                        'wisata_id_222058' => $wisata->id_222058, 
-                        'url_foto_222058' => $name ,
-                        'deskripsi_222058' => $request->deskripsi[$index] 
+                        'wisata_id_222058' => $wisata->id_222058,
+                        'url_foto_222058' => $name,
+                        'deskripsi_222058' => $request->deskripsi[$index]
                     ]);
                 }
             }
 
             // Menghapus dan menambah jasa travel
-            JasaTravel::where('wisata_id_222058', $id)->delete(); 
+            JasaTravel::where('wisata_id_222058', $id)->delete();
             if ($request->has('nama_travel')) {
                 foreach ($request->nama_travel as $index => $namaTravel) {
                     JasaTravel::create([
-                        'wisata_id_222058' => $wisata->id_222058, 
-                        'nama_travel_222058' => $namaTravel, 
-                        'jenis_kendaraan_222058' => $request->jenis_kendaraan[$index], 
-                        'harga_perjalanan_222058' => $request->tarif[$index] 
+                        'wisata_id_222058' => $wisata->id_222058,
+                        'nama_travel_222058' => $namaTravel,
+                        'jenis_kendaraan_222058' => $request->jenis_kendaraan[$index],
+                        'harga_perjalanan_222058' => $request->tarif[$index]
                     ]);
                 }
             }
@@ -228,20 +229,32 @@ class WisataController extends Controller
         try {
             DB::beginTransaction();
 
-            $wisata = Wisata::where('id_222058',$id)->first();
+            $wisata = Wisata::where('id_222058', $id)->first();
 
             // Menghapus foto terkait wisata
-            $fotos = FotoWisata::where('wisata_id_222058', $id)->get(); 
+            $fotos = FotoWisata::where('wisata_id_222058', $wisata->id_222058)->get();
+
             foreach ($fotos as $foto) {
-                $filePath = public_path('assets/img/foto_wisata/' . $foto->url_foto_222058); 
+                $filePath = public_path('assets/img/foto_wisata/' . $foto->url_foto_222058);
                 if (File::exists($filePath)) {
                     File::delete($filePath);
                 }
-                $foto->delete();
+                $fotodel = FotoWisata::where('id_222058', $foto->id_222058)->first();
+                if ($fotodel) {
+                    $fotodel->delete();
+                }
             }
 
             // Menghapus data jasa travel terkait wisata
-            JasaTravel::where('wisata_id_222058', $id)->delete(); 
+            JasaTravel::where('wisata_id_222058', $id)->delete();
+
+            // Menghapus foto terkait wisata
+            $reviews = Review::where('wisata_id_222058', $wisata->id_222058)->get();
+
+            foreach ($reviews as $review) {
+                $reviewdel = Review::where('id_222058', $review->id_222058)->first();
+                $reviewdel->delete();
+            }
 
             // Menghapus wisata
             $wisata->delete();

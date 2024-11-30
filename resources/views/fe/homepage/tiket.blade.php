@@ -196,7 +196,7 @@
                             <tr>
 
                                 @php
-                                    $user = \App\Models\Admin::where('id', $ticket->pengguna_id_222058)->first();
+                                    $user = \App\Models\Pengguna::where('id_222058', $ticket->pengguna_id_222058)->first();
                                     $wisata = \App\Models\Wisata::where(
                                         'id_222058',
                                         $ticket->wisata_id_222058,

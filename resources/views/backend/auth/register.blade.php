@@ -97,12 +97,9 @@
                             <div class="form-row mb-3">
                                 <div class="form-group col-md-12 col-sm-12">
                                     <label for="password">Tipe Pengguna</label>
-                                    <select name="roles[]" id="roles" class="form-control" required>
-                                        @foreach ($roles as $role)
-                                            @if ($role->name !== 'superadmin')
-                                                <option value="{{ $role->name }}">{{ $role->name }}</option>
-                                            @endif
-                                        @endforeach
+                                    <select name="roles" id="roles" class="form-control" required>
+                                        <option value="pengelola wisata">pengelola wisata</option>
+                                        <option value="pengunjung">pengunjung</option>
                                     </select>
 
                                 </div>

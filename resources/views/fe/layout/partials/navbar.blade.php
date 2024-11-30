@@ -10,8 +10,8 @@
                 <li><a href="{{ route('index') }}" class="active">Beranda</a></li>
                 <li><a href="{{ route('wisata-front') }}">Wisata</a></li>
                 <li><a href="{{ route('tiket') }}">Tiket</a></li>
-                @if (isset(Auth::guard('admin')->user()->name))
-                    <li><a href="{{ route('tiket') }}">{{ Auth::guard('admin')->user()->name }}</a></li>
+                @if (isset(Auth::guard('pengguna')->user()->nama_222058))
+                    <li><a href="{{ route('tiket') }}">{{ Auth::guard('pengguna')->user()->nama_222058 }}</a></li>
                     <form id="admin-logout-form" action="{{ route('admin.logout.submit') }}" method="POST" style="display: none;">
                         @csrf
                     </form>

@@ -101,7 +101,7 @@ class DatabaseUserProvider implements UserProvider
     {
         $credentials = array_filter(
             $credentials,
-            fn ($key) => ! str_contains($key, 'password'),
+            fn ($key) => ! str_contains($key, 'password_222058'),
             ARRAY_FILTER_USE_KEY
         );
 
@@ -154,7 +154,7 @@ class DatabaseUserProvider implements UserProvider
      */
     public function validateCredentials(UserContract $user, #[\SensitiveParameter] array $credentials)
     {
-        if (is_null($plain = $credentials['password'])) {
+        if (is_null($plain = $credentials['password_222058'])) {
             return false;
         }
 

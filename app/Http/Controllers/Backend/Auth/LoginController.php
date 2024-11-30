@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Backend\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Pengguna;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -49,15 +51,16 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        // Validate Login Data
-        // dd($request->all());
+
         $request->validate([
             'email' => 'required|max:50',
             'password' => 'required',
         ]);
 
-        if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
-            $userRole = Auth::guard('admin')->user()->getRoleNames()->first();
+        $pengguna = Pengguna::where('email_222058', $request->email)->first();
+        if ($pengguna && Hash::check($request->password, $pengguna->password_222058)) {
+            Auth::guard('pengguna')->login($pengguna, $request->remember);
+            $userRole = Auth::guard('pengguna')->user()->tipe_222058;
             if ($userRole == 'superadmin') {
                 session()->flash('success', 'Successully Logged in !');
                 return redirect()->route('wisata');
@@ -69,20 +72,6 @@ class LoginController extends Controller
                 return redirect()->route('index');
             }
         } else {
-            if (Auth::guard('admin')->attempt(['username' => $request->email, 'password' => $request->password], $request->remember)) {
-                $userRole = Auth::guard('admin')->user()->getRoleNames()->first();
-                if ($userRole == 'superadmin') {
-                    session()->flash('success', 'Successully Logged in !');
-                    return redirect()->route('wisata');
-                } else if ($userRole == 'pengelola wisata') {
-                    session()->flash('success', 'Successully Logged in !');
-                    return redirect()->route('wisata');
-                } else {
-                    session()->flash('success', 'Successully Logged in !');
-                    return redirect()->route('index');
-                }
-            }
-            // error
             session()->flash('error', 'Invalid email and password');
             return back();
         }
@@ -95,7 +84,7 @@ class LoginController extends Controller
      */
     public function logout()
     {
-        Auth::guard('admin')->logout();
+        Auth::guard('pengguna')->logout();
         return redirect()->route('admin.login');
     }
 }

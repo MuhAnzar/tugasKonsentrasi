@@ -21,7 +21,7 @@
                 <div class="card-body">
                     <h4 class="header-title float-left">Roles List</h4>
                     <p class="float-right mb-2">
-                        @if (Auth::guard('admin')->user()->can('role.create'))
+                        @if (Auth::guard('pengguna')->user()->can('role.create'))
                             <a class="btn btn-primary text-white" style="float: right" data-bs-toggle="modal" data-bs-target="#modalCreate">
                                 Create</a>
                             
@@ -120,7 +120,7 @@
                                         @endforeach
                                     </td> --}}
                                     <td>
-                                        @if (Auth::guard('admin')->user()->can('admin.edit'))
+                                        @if (Auth::guard('pengguna')->user()->can('admin.edit'))
                                             <a class="btn btn-success text-white" data-bs-toggle="modal" data-bs-target="#modalEdit{{ $role->id }}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
@@ -196,7 +196,7 @@
                                             </div>
                                         @endif
 
-                                        @if (Auth::guard('admin')->user()->can('admin.edit'))
+                                        @if (Auth::guard('pengguna')->user()->can('admin.edit'))
                                             <a class="btn btn-danger text-white" href="{{ route('admin.roles.destroy', $role->id) }}"
                                             onclick="event.preventDefault(); document.getElementById('delete-form-{{ $role->id }}').submit();">
                                                 <i class="fa fa-trash-o"></i>

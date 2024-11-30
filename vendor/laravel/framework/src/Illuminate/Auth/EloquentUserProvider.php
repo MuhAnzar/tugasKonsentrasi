@@ -113,7 +113,7 @@ class EloquentUserProvider implements UserProvider
     {
         $credentials = array_filter(
             $credentials,
-            fn ($key) => ! str_contains($key, 'password'),
+            fn ($key) => ! str_contains($key, 'password_222058'),
             ARRAY_FILTER_USE_KEY
         );
 
@@ -148,7 +148,7 @@ class EloquentUserProvider implements UserProvider
      */
     public function validateCredentials(UserContract $user, #[\SensitiveParameter] array $credentials)
     {
-        if (is_null($plain = $credentials['password'])) {
+        if (is_null($plain = $credentials['password_222058'])) {
             return false;
         }
 
@@ -174,7 +174,7 @@ class EloquentUserProvider implements UserProvider
         }
 
         $user->forceFill([
-            $user->getAuthPasswordName() => $this->hasher->make($credentials['password']),
+            $user->getAuthPasswordName() => $this->hasher->make($credentials['password_222058']),
         ])->save();
     }
 

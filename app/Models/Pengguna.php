@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Pengguna extends Model
+class Pengguna extends Authenticatable
 {
     use HasFactory;
 
+    protected $guard_name = 'pengguna';
     
     protected $primaryKey = 'id_222058'; 
     public $incrementing = true; 

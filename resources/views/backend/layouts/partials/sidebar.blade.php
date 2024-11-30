@@ -1,6 +1,6 @@
  <!-- sidebar menu area start -->
  @php
-     $usr = Auth::guard('admin')->user();
+     $usr = Auth::guard('pengguna')->user();
  @endphp
  <div class="sidebar-menu">
     <div class="sidebar-header">

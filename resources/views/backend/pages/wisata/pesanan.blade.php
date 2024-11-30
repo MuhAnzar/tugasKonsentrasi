@@ -116,7 +116,7 @@
                                         <th>Total Pembayaran</th>
                                         <th>Bukti Pembayaran</th>
                                         <th>Status</th>
-                                        @if (Auth::guard('admin')->user()->hasRole('superadmin'))
+                                        @if (Auth::guard('pengguna')->user()->tipe_222058 == 'superadmin')
                                             <th>Aksi</th>
                                         @endif
                                     </tr>
@@ -126,8 +126,8 @@
                                         <tr>
 
                                             @php
-                                                $user = \App\Models\Admin::where(
-                                                    'id',
+                                                $user = \App\Models\Pengguna::where(
+                                                    'id_222058',
                                                     $ticket->pengguna_id_222058,
                                                 )->first();
                                                 $wisata = \App\Models\Wisata::where(
@@ -180,10 +180,12 @@
                                                 @elseif($pembayaran->status_222058 == 'failed')
                                                     <span class="badge badge-danger" style="background: red">Pembayaran
                                                         Ditolak</span>
+                                                @elseif($pembayaran->status_222058 == 'pending')
+                                                    <span class="badge badge-danger" style="background: #ffc673">Menunggu Pembayaran</span>
                                                 @endif
                                             </td>
                                             <!-- Actions -->
-                                            @if (Auth::guard('admin')->user()->hasRole('superadmin'))
+                                            @if (Auth::guard('pengguna')->user()->tipe_222058 == 'superadmin')
                                                 <td>
                                                     @if ($pembayaran->status_222058 == 'pending_confirmation')
                                                         <a href="{{ route('wisata.update.pesanan', ['id' => $pembayaran->id_222058, 'status' => 'complate']) }}"

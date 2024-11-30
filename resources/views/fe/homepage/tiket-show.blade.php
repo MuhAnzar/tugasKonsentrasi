@@ -178,8 +178,8 @@
             <div class="card">
                 <div class="card-body">
                     @php
-                        $user = \App\Models\Admin::where(
-                            'id',
+                        $user = \App\Models\Pengguna::where(
+                            'id_222058',
                             $tiket->pengguna_id_222058,
                         )->first();
                         $wisata = \App\Models\Wisata::where(

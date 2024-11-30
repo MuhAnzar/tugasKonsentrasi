@@ -23,7 +23,7 @@
                 <div class="card-body">
                     <h4 class="header-title float-left">{{ $page_title }} List</h4>
                     <p class="float-right mb-2">
-                        @if (Auth::guard('admin')->user()->can('merk.create'))
+                        @if (Auth::guard('pengguna')->user()->can('merk.create'))
                             {{-- <a class="btn btn-primary text-white" style="float: right" href="{{ route('merk.admins.create') }}" data-bs-toggle="modal" data-bs-target="#exampleModal"> --}}
                             <a class="btn btn-primary text-white mb-3" style="float: right" data-bs-toggle="modal" data-bs-target="#modalCreate">
                                 Tambah Data {{ $page_title }}  </a>
@@ -71,7 +71,7 @@
                                     <td>{{ $loop->index+1 }}</td>
                                     <td>{{ $s->merk }}</td>
                                     <td>
-                                        @if (Auth::guard('admin')->user()->can('merk.edit'))
+                                        @if (Auth::guard('pengguna')->user()->can('merk.edit'))
                                             <a class="btn btn-success text-white" data-bs-toggle="modal" data-bs-target="#modalEdit{{ $s->id }}" href="#">
                                                 <i class="fa fa-edit"></i>
                                             </a>
@@ -102,7 +102,7 @@
                                             </div>
                                         @endif
                                         
-                                        @if (Auth::guard('admin')->user()->can('merk.delete'))
+                                        @if (Auth::guard('pengguna')->user()->can('merk.delete'))
                                             <a class="btn btn-danger text-white" href="{{ route('merk.destroy', $s->id) }}">
                                                 <i class="fa fa-trash-o"></i>
                                             </a>

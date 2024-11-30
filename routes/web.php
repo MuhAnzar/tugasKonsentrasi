@@ -44,8 +44,6 @@ Route::get('admin/transaksi/invoice/{id}', 'Backend\TransaksiController@invoice'
 
 Route::group(['prefix' => 'admin'], function () {
     Route::get('/', 'Backend\DashboardController@index')->name('admin.dashboard');
-    Route::resource('roles', 'Backend\RolesController', ['names' => 'admin.roles']);
-    Route::resource('users', 'Backend\UsersController', ['names' => 'admin.users']);
     Route::resource('admins', 'Backend\AdminsController', ['names' => 'admin.admins']);
 
     Route::group(['prefix' => 'wisata'], function () {

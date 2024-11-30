@@ -8,7 +8,6 @@ use App\Models\Pengguna;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
 
 class AdminsController extends Controller
 {
@@ -17,7 +16,7 @@ class AdminsController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            $this->user = Auth::guard('admin')->user();
+            $this->user = Auth::guard('pengguna')->user();
             return $next($request);
         });
     }
@@ -29,12 +28,8 @@ class AdminsController extends Controller
      */
     public function index()
     {
-        if (is_null($this->user) || !$this->user->can('admin.view')) {
-            abort(403, 'Sorry !! You are Unauthorized to view any admin !');
-        }
 
-        $data['admins'] = Admin::get();
-        $data['roles']  = Role::all();
+        $data['admins'] = Pengguna::get();
         return view('backend.pages.admins.index', $data);
     }
 
@@ -45,12 +40,8 @@ class AdminsController extends Controller
      */
     public function create()
     {
-        if (is_null($this->user) || !$this->user->can('admin.create')) {
-            abort(403, 'Sorry !! You are Unauthorized to create any admin !');
-        }
 
-        $roles  = Role::all();
-        return view('backend.pages.admins.create', compact('roles'));
+        return view('backend.pages.admins.create');
     }
 
     /**
@@ -61,36 +52,18 @@ class AdminsController extends Controller
      */
     public function store(Request $request)
     {
-        if (is_null($this->user) || !$this->user->can('admin.create')) {
-            abort(403, 'Sorry !! You are Unauthorized to create any admin !');
-        }
-
         // Validation Data
         $request->validate([
             'name' => 'required|max:50',
-            'email' => 'required|max:100|email|unique:admins',
-            'username' => 'required|max:100|unique:admins',
+            'email' => 'required|max:100',
             'password' => 'required|min:6|confirmed',
         ]);
 
-        // Create New Admin
-        $admin = new Admin();
-        $admin->name = $request->name;
-        $admin->username = $request->username;
-        $admin->email = $request->email;
-        $admin->password = Hash::make($request->password);
-        $admin->save();
-
-        if ($request->roles) {
-            $admin->assignRole($request->roles);
-        }
-
         $pengguna = new Pengguna();
-        $pengguna->id_master_222058 = $admin->id;
         $pengguna->nama_222058 = $request->name;
         $pengguna->email_222058 = $request->email;
         $pengguna->password_222058 = Hash::make($request->password);
-        $pengguna->tipe_222058 = $request->roles[0];
+        $pengguna->tipe_222058 = $request->roles;
         $pengguna->save();
 
         session()->flash('success', 'Admin has been created !!');
@@ -116,13 +89,8 @@ class AdminsController extends Controller
      */
     public function edit(int $id)
     {
-        if (is_null($this->user) || !$this->user->can('admin.edit')) {
-            abort(403, 'Sorry !! You are Unauthorized to edit any admin !');
-        }
-
         $admin = Admin::find($id);
-        $roles  = Role::all();
-        return view('backend.pages.admins.edit', compact('admin', 'roles'));
+        return view('backend.pages.admins.edit', compact('admin'));
     }
 
     /**
@@ -134,10 +102,6 @@ class AdminsController extends Controller
      */
     public function update(Request $request, int $id)
     {
-        if (is_null($this->user) || !$this->user->can('admin.edit')) {
-            abort(403, 'Sorry !! You are Unauthorized to edit any admin !');
-        }
-
         // TODO: You can delete this in your local. This is for heroku publish.
         // This is only for Super Admin role,
         // so that no-one could delete or disable it by somehow.
@@ -146,41 +110,18 @@ class AdminsController extends Controller
             return back();
         }
 
-        // Create New Admin
-        $admin = Admin::find($id);
-
-        // Validation Data
-        $request->validate([
-            'name' => 'required|max:50',
-            'email' => 'required|max:100|email|unique:admins,email,' . $id,
-            'password' => 'nullable|min:6|confirmed',
-        ]);
-
-
-        $admin->name = $request->name;
-        $admin->email = $request->email;
-        $admin->username = $request->username;
-        if ($request->password) {
-            $admin->password = Hash::make($request->password);
-        }
-        $admin->save();
-
-        $admin->roles()->detach();
-        if ($request->roles) {
-            $admin->assignRole($request->roles);
-        }
-
-        $check  = Pengguna::where('id_master_222058', $admin->id)->first();
+        $check  = Pengguna::where('id_222058', $id)->first();
         if ($check != null) {
-            $pengguna  = Pengguna::where('id_master_222058', $admin->id)->first();
+            $pengguna  = Pengguna::where('id_222058', $id)->first();
         } else {
             $pengguna = new Pengguna();
         }
-        $pengguna->id_master_222058 = $admin->id;
         $pengguna->nama_222058 = $request->name;
         $pengguna->email_222058 = $request->email;
-        $pengguna->password_222058 = $admin->password;
-        $pengguna->tipe_222058 = $request->roles[0];
+        if ($request->password) {
+            $pengguna->password = Hash::make($request->password);
+        }
+        $pengguna->tipe_222058 = $request->roles;
         $pengguna->save();
 
         session()->flash('success', 'Admin has been updated !!');
@@ -195,10 +136,6 @@ class AdminsController extends Controller
      */
     public function destroy(int $id)
     {
-        if (is_null($this->user) || !$this->user->can('admin.delete')) {
-            abort(403, 'Sorry !! You are Unauthorized to delete any admin !');
-        }
-
         // TODO: You can delete this in your local. This is for heroku publish.
         // This is only for Super Admin role,
         // so that no-one could delete or disable it by somehow.
@@ -206,19 +143,10 @@ class AdminsController extends Controller
             session()->flash('error', 'Sorry !! You are not authorized to delete this Admin as this is the Super Admin. Please create new one if you need to test !');
             return back();
         }
-
-        $admin = Admin::find($id);
-
-        
-        if (!is_null($admin)) {
-
-            $pengguna  = Pengguna::where('id_master_222058', $admin->id)->first();
-            if ($pengguna != null) {
-                $pengguna->delete();
-            } 
-    
-            $admin->delete();
-        }
+        $pengguna  = Pengguna::where('id_222058', $id)->first();
+        if ($pengguna != null) {
+            $pengguna->delete();
+        } 
 
         session()->flash('success', 'Admin has been deleted !!');
         return back();

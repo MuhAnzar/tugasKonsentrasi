@@ -37,17 +37,17 @@ class LandingPageController extends Controller
     }
     public function tiket()
     {
-        if (Auth::guard('admin')->user() == null) {
+        if (Auth::guard('pengguna')->user() == null) {
             return redirect('admin/login');
         }
         $data['page_title'] = 'Tiket';
-        $data['tiket'] = Tiket::where('pengguna_id_222058', Auth::guard('admin')->user()->id)->orderBy('created_at', 'desc')->get();
+        $data['tiket'] = Tiket::where('pengguna_id_222058', Auth::guard('pengguna')->user()->id_222058)->orderBy('created_at', 'desc')->get();
 
         return view('fe.homepage.tiket', $data);
     }
     public function tiketShow($id)
     {
-        if (Auth::guard('admin')->user() == null) {
+        if (Auth::guard('pengguna')->user() == null) {
             return redirect('admin/login');
         }
         $data['page_title'] = 'Tiket';
@@ -76,14 +76,14 @@ class LandingPageController extends Controller
     public function StorepesanTiket(Request $request, $id)
     {
 
-        if (Auth::guard('admin')->user() == null) {
+        if (Auth::guard('pengguna')->user() == null) {
             return redirect('admin/login');
         }
         try {
 
             $tiket = new Tiket();
             $tiket->no_tiket_222058 = 'TIKET-' . strtoupper(Str::random(6));
-            $tiket->pengguna_id_222058 = Auth::guard('admin')->user()->id;
+            $tiket->pengguna_id_222058 = Auth::guard('pengguna')->user()->id_222058;
             $tiket->wisata_id_222058 = $id;
             $tiket->status_222058 = 'pending';
             $tiket->tanggal_kunjungan_222058 = $request->tanggal_kunjungan;
@@ -164,61 +164,19 @@ class LandingPageController extends Controller
         try {
             $request->validate([
                 'name' => 'required|max:50',
-                'email' => 'required|max:100|email|unique:admins',
+                'email' => 'required|max:100',
                 'password' => 'required|min:6',
             ]);
-            // Create New Admin
-            $admin = new Admin();
-            $admin->name = $request->name;
-            $admin->username = $request->name;
-            $admin->email = $request->email;
-            $admin->password = Hash::make($request->password);
-            $admin->save();
-
-            if ($request->roles) {
-                $admin->assignRole($request->roles);
-            }
 
             $pengguna = new Pengguna();
-            $pengguna->id_master_222058 = $admin->id;
             $pengguna->nama_222058 = $request->name;
             $pengguna->email_222058 = $request->email;
             $pengguna->password_222058 = Hash::make($request->password);
-            $pengguna->tipe_222058 = $request->roles[0];
+            $pengguna->tipe_222058 = $request->roles;
             $pengguna->save();
 
-            if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
-                $userRole = Auth::guard('admin')->user()->getRoleNames()->first();
-                if ($userRole == 'superadmin') {
-                    session()->flash('success', 'Successully Logged in !');
-                    return redirect()->route('wisata');
-                } else if ($userRole == 'pengelola wisata') {
-                    session()->flash('success', 'Successully Logged in !');
-                    return redirect()->route('wisata');
-                } else {
-                    session()->flash('success', 'Successully Logged in !');
-                    return redirect()->route('index');
-                }
-            } else {
-                if (Auth::guard('admin')->attempt(['username' => $request->email, 'password' => $request->password], $request->remember)) {
-                    $userRole = Auth::guard('admin')->user()->getRoleNames()->first();
-                    if ($userRole == 'superadmin') {
-                        session()->flash('success', 'Successully Logged in !');
-                        return redirect()->route('wisata');
-                    } else if ($userRole == 'pengelola wisata') {
-                        session()->flash('success', 'Successully Logged in !');
-                        return redirect()->route('wisata');
-                    } else {
-                        session()->flash('success', 'Successully Logged in !');
-                        return redirect()->route('index');
-                    }
-                }
-                // error
-                session()->flash('error', 'Invalid email and password');
-                return back();
-            }
-            // session()->flash('success', 'Register berhasil.');
-            // return redirect('admin/login');
+            session()->flash('success', 'Register berhasil.');
+            return redirect('admin/login');
 
         } catch (\Throwable $th) {
             session()->flash('failed', $th->getMessage());
@@ -228,12 +186,12 @@ class LandingPageController extends Controller
 
     public function rating(Request $request, $id)
     {
-        if (Auth::guard('admin')->user() == null) {
+        if (Auth::guard('pengguna')->user() == null) {
             return redirect('admin/login');
         }
 
         $review = new Review();
-        $review->pengguna_id_222058 = Auth::guard('admin')->user()->id;
+        $review->pengguna_id_222058 = Auth::guard('pengguna')->user()->id_222058;
         $review->wisata_id_222058 = $id;
         $review->rating_222058 = $request->rating;
         $review->komentar_222058 = $request->komentar;

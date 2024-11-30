@@ -551,15 +551,15 @@
                 <div class="review-list">
                     @foreach ($review as $reviews)
                         @php
-                            $user = \App\Models\Admin::where(
-                                'id',
+                            $user = \App\Models\Pengguna::where(
+                                'id_222058',
                                 $reviews->pengguna_id_222058,
                             )->first();
                         @endphp
                         <div class="review-item"
                             style="border: 1px solid #000; padding: 10px; margin-bottom: 10px; border-radius: 10px;">
                             <div style="display: flex; justify-content: space-between;">
-                                <strong>{{ $user->name }}</strong>
+                                <strong>{{ $user->nama_222058 }}</strong>
                                 <!-- Replace with user relation -->
                                 <span>{{ \Carbon\Carbon::parse($reviews->created_at)->format('d F Y') }}</span>
                             </div>
